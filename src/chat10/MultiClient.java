@@ -1,4 +1,4 @@
-package chat9;
+package chat10;
 
 import java.util.Scanner;
 import java.net.Socket;
@@ -38,7 +38,7 @@ public class MultiClient {
 	}
 }
 //cd \02Workspaces\01Java\NetworkChating\bin
-//java chat9.MultiClient
+//java multichat.MultiClient
 
 
 

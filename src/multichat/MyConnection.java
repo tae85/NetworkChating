@@ -1,4 +1,4 @@
-package chat9.copy;
+package multichat;
 
 import java.sql.CallableStatement;
 import java.sql.Connection;

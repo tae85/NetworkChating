@@ -1,4 +1,4 @@
-package chat9.copy;
+package chat10;
 
 //JDBC프로그램의 최상위 부모로 사용할 인터페이스 생성
 public interface IConnect {

@@ -1,4 +1,4 @@
-package chat9.copy;
+package chat10_T;
 
 import java.util.Scanner;
 import java.net.Socket;
@@ -19,12 +19,16 @@ public class MultiClient {
 			if(args.length > 0) {
 				ServerIP = args[0];
 			}
+			
+			//소켓 객체 생성
 			Socket socket = new Socket(ServerIP, 9999);
 			System.out.println("서버와 연결되었습니다...");
 			
+			//서버에서 보내는 메시지를 사용자의 콘솔에 출력하는 쓰레드
 			Thread receiver = new Receiver(socket);
 			receiver.start();
 			
+			//클라이언트가 입력한 메세지를 서버로 전송해주는 쓰레드
 			Thread sender = new Sender(socket, s_name);
 			sender.start();
 		} 
@@ -34,7 +38,7 @@ public class MultiClient {
 	}
 }
 //cd \02Workspaces\01Java\NetworkChating\bin
-//java chat9.MultiClient
+//java multichat.MultiClient
 
 
 

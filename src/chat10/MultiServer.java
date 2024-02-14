@@ -1,4 +1,4 @@
-package chat9;
+package chat10;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
@@ -23,6 +23,7 @@ public class MultiServer {
 	Map<String, PrintWriter> clientMap;
 	HashSet<String> blackList = new HashSet<String>();
 	HashSet<String> pWords = new HashSet<String>();
+	HashMap<String, String> blockMap;
 	
 	String fixtoMsg = "";
 	String fixtoFlag;
@@ -35,13 +36,9 @@ public class MultiServer {
 		/* HashMap 동기화 설정. 쓰레드가 사용자 정보에 동시접근하는 것을 차단한다. */
 		Collections.synchronizedMap(clientMap);
 		
-		blackList.add("kkk");
-		blackList.add("ttt");
-		blackList.add("aaa");
+		blackList.add("kkk");blackList.add("ttt");blackList.add("aaa");
 		
-		pWords.add("18");
-		pWords.add("28");
-		pWords.add("138");
+		pWords.add("18");pWords.add("28");pWords.add("138");
 	}
 	
 	//채팅 서버 초기화
@@ -61,8 +58,6 @@ public class MultiServer {
 						socket.getPort() + "포트를 통해 " + 
 						socket.getLocalAddress() + "(서버)의 " + 
 						socket.getLocalPort() + "포트로 연결되었습니다.");
-				
-				
 				
 				//클라이언트 1명당 하나의 쓰레드가 생성되어 메세지 전송 및 수신을 담당한다.
 				Thread mst = new MultiServerT(socket);
@@ -179,11 +174,9 @@ public class MultiServer {
 					return false;
 				}
 			}
-			
 		} catch (Exception e) {
 			System.out.println("중복아이디 예외처리:" + e);
 		}
-		System.out.println("아이디체크 true");
 		return true;
 	}
 	
@@ -215,6 +208,29 @@ public class MultiServer {
 			msg = msg.replace(str, ast);
 		}
 		return msg;
+	}
+	
+	//차단 목록 추가
+	public void addBlock(String name, String blockName) {
+		if(blockMap == null) {
+			blockMap.put(name, blockName + " ");
+		}
+		else {
+			if(blockMap.containsKey(name)) {
+				blockMap.put(name, blockMap.get(name)+blockName+"|");
+			}
+			else {
+				blockMap.put(name, blockName+"|");
+			}
+		}
+	}
+	
+	//차단 목록 해제
+	public void minBlock(String name, String blockName) {
+		if(blockMap!=null && blockMap.containsKey(name)) {
+			String newblockUser = blockMap.get(name).replace(blockName+"|", "");
+			blockMap.put(name, newblockUser);
+		}
 	}
 	
 	///////////////////////////////////////////////////////////////////
@@ -325,6 +341,23 @@ public class MultiServer {
 							fixtoMsg = "/to " + strArr[1] + " ";
 							checkWhisperFlag = true;
 						}
+						else if(strArr[0].equals("/block")) {
+							addBlock(name, strArr[1]);
+							out.println(URLEncoder.encode(strArr[1]+"님이 차단되었습니다.", "UTF-8"));
+						}
+						else if(strArr[0].equals("/unblock")) {
+							minBlock(name, strArr[1]);
+							out.println(URLEncoder.encode(strArr[1]+"님이 차단 해제되었습니다.", "UTF-8"));
+						}
+						else if(strArr[0].equals("/list")) {
+							Iterator<String> it = clientMap.keySet().iterator();
+							String it_str = "";
+							while(it.hasNext()) {
+								it_str += "\"" + it.next() + "\"님 ";
+							}
+							out.println("접속자: " + it_str);
+//							out.println(URLEncoder.encode(strArr[1]+"님이 차단 해제되었습니다.", "UTF-8"));
+						}
 					}
 					else {
 						//슬러쉬가 없다면 일반 대화내용
@@ -344,8 +377,6 @@ public class MultiServer {
 							Thread.currentThread().getName() + "] 퇴장");
 					System.out.println("현재 접속자 수는 " + clientMap.size() + "명 입니다.");
 				}
-				
-				
 				try {
 					in.close();
 					out.close();

@@ -1,4 +1,4 @@
-package chat9.copy;
+package chat10;
 
 import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
@@ -11,6 +11,7 @@ public class Sender extends Thread {
 	Socket socket;
 	PrintWriter out = null;
 	String name;
+	
 	
 	public Sender(Socket socket, String name) {
 		this.socket = socket;
@@ -28,7 +29,6 @@ public class Sender extends Thread {
 		Scanner s = new Scanner(System.in);
 		
 		try {
-//			System.out.println("센더1111");
 			out.println(URLEncoder.encode(name, "UTF-8"));
 			
 			while(out != null) {
@@ -54,7 +54,6 @@ public class Sender extends Thread {
 		catch (Exception e) {
 			System.out.println("예외>Sender>run2:" + e);
 		}
-		System.out.println("센더 마지막");
 	}
 }
 

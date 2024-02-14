@@ -1,4 +1,4 @@
-package chat9.copy;
+package chat10;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
@@ -11,6 +11,7 @@ public class Receiver extends Thread {
 	Socket socket;
 	BufferedReader in = null;
 	
+	//socket을 매개변수로 받는 생성자
 	public Receiver(Socket socket) {
 		this.socket = socket;
 		
@@ -25,7 +26,6 @@ public class Receiver extends Thread {
 	
 	@Override
 	public void run() {
-//		System.out.println("리시버1111");
 		while(in != null) {
 			try {
 				System.out.println("Thread Receive : " + 
@@ -47,11 +47,11 @@ public class Receiver extends Thread {
 		
 		try {
 			in.close();
+			System.exit(0);	//test
 		}
 		catch (Exception e) {
 			System.out.println("예외>Receiver>run2:" + e);
 		}
-		System.out.println("리시버 마지막");
 	}
 }
 

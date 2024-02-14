@@ -1,4 +1,4 @@
-package chat9;
+package multichat;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
@@ -26,7 +26,6 @@ public class Receiver extends Thread {
 	
 	@Override
 	public void run() {
-//		System.out.println("리시버1111");
 		while(in != null) {
 			try {
 				System.out.println("Thread Receive : " + 

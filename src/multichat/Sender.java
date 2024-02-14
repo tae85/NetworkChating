@@ -1,4 +1,4 @@
-package chat9;
+package multichat;
 
 import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
@@ -29,7 +29,6 @@ public class Sender extends Thread {
 		Scanner s = new Scanner(System.in);
 		
 		try {
-//			System.out.println("센더1111");
 			out.println(URLEncoder.encode(name, "UTF-8"));
 			
 			while(out != null) {
