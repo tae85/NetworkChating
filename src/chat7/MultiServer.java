@@ -5,6 +5,8 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.net.URLDecoder;
+import java.net.URLEncoder;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -83,7 +85,7 @@ public class MultiServer {
 				 */
 				if(name.equals("")) {
 					/* 입장 혹은 퇴장에서 사용되는 부분 */
-					it_out.println(msg);
+					it_out.println(URLEncoder.encode(msg, "UTF-8"));
 				}
 				else {
 					/* 메세지를 보낼 때 사용되는 부분 */
@@ -93,7 +95,6 @@ public class MultiServer {
 			catch (Exception e) {
 				System.out.println("예외:" + e);
 			}
-			
 		}
 	}
 	
@@ -112,7 +113,6 @@ public class MultiServer {
 					//일치하면 한 사람에게만 귓속말을 보낸다.
 					it_out.println("[귓속말]" + name + " : " + msg);
 				}
-				
 			} 
 			catch (Exception e) {
 				System.out.println("예외:" + e);
@@ -132,7 +132,8 @@ public class MultiServer {
 			this.socket = socket;
 			try {
 				out = new PrintWriter(this.socket.getOutputStream(), true);
-				in = new BufferedReader(new InputStreamReader(this.socket.getInputStream()));
+				in = new BufferedReader(
+						new InputStreamReader(this.socket.getInputStream(), "UTF-8"));
 			} 
 			catch (Exception e) {
 				System.out.println("예외:" + e);
@@ -147,6 +148,8 @@ public class MultiServer {
 			try {
 				//첫번재 메세지는 대화명이므로 접속을 알린다
 				name = in.readLine();
+				name = URLDecoder.decode(name, "UTF-8");
+				
 				sendAllMsg("", name + "님이 입장하셨습니다.");
 				clientMap.put(name, out);
 				System.out.println(name + " 접속");
@@ -155,6 +158,7 @@ public class MultiServer {
 				//두번째 메세지부터는 "대화내용"이다.
 				while(in != null) {
 					s = in.readLine();
+					s = URLDecoder.decode(s, "UTF-8");
 					if(s == null) {
 						break;
 					}
@@ -193,9 +197,6 @@ public class MultiServer {
 						//슬러쉬가 없다면 일반 대화내용
 						sendAllMsg(name, s);
 					}
-					
-					
-					
 				}
 			} 
 			catch (Exception e) {
